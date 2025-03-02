@@ -75,15 +75,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.min.js"></script>
     
     <!-- Import OrbitControls -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/addons/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/examples/js/controls/OrbitControls.js"></script>
     
     <!-- Import GLTFLoader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/addons/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/examples/js/loaders/GLTFLoader.js"></script>
     
     <script>
         // Debug console message to check if script is running
         console.log("Script started");
-
+        
         // Initialize the scene, camera, and renderer
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f0f0);
@@ -114,7 +114,8 @@
         // Add orbit controls to rotate, zoom
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
+        controls.dampingFactor = 0.25;
+        controls.screenSpacePanning = false;
         
         // Loading elements
         const loadingElement = document.getElementById('loading');
@@ -124,7 +125,7 @@
         // Function to load model
         function loadModel() {
             console.log("Starting to load model");
-
+            
             // Create and configure the loader
             const loader = new THREE.GLTFLoader();
             
@@ -135,12 +136,12 @@
                     scene.remove(object);
                 }
             });
-
+            
             // Replace with the actual path to your GLB file
-            const modelUrl = 'Robo.glb'; // Make sure this file path is correct
+            const modelUrl = 'card.glb';
             
             console.log("Loading model from:", modelUrl);
-
+            
             // Load the model
             loader.load(
                 modelUrl,
@@ -169,35 +170,19 @@
                     if (xhr.lengthComputable) {
                         const percentComplete = Math.round((xhr.loaded / xhr.total) * 100);
                         progressElement.textContent = percentComplete + '%';
-                        console.log('Loading progress:', percentComplete + '%');
                     }
                 },
                 function (error) {
-                    // Error handling
                     console.error('Error loading the model:', error);
-                    loadingElement.innerHTML = 
-                        'Error loading model: ' + error.message + '<br>' +
-                        'Please check that your file exists and is named correctly.<br>' +
-                        '<button id="retry-button" class="button">Retry Loading</button>';
-                    
-                    document.getElementById('retry-button').addEventListener('click', loadModel);
+                    loadingElement.innerHTML = 'Error loading model: ' + error.message;
+                    retryButton.style.display = 'inline-block';
+                    retryButton.addEventListener('click', loadModel);
                 }
             );
         }
         
         // Add retry button functionality
         retryButton.addEventListener('click', loadModel);
-
-        // Add a fallback cube to the scene for debugging
-        function addFallbackCube() {
-            const geometry = new THREE.BoxGeometry();
-            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-            const cube = new THREE.Mesh(geometry, material);
-            scene.add(cube);
-        }
-
-        // Add fallback cube for debugging
-        addFallbackCube();
         
         // Handle window resize
         window.addEventListener('resize', function () {

@@ -71,11 +71,11 @@
         </div>
     </div>
 
-    <!-- Import Three.js via CDN -->
+    <!-- Import Three.js via Skypack -->
     <script type="module">
-        import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.module.min.js";
-        import { OrbitControls } from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/examples/jsm/controls/OrbitControls.js";
-        import { GLTFLoader } from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/examples/jsm/loaders/GLTFLoader.js";
+        import * as THREE from "https://cdn.skypack.dev/three";
+        import { OrbitControls } from "https://cdn.skypack.dev/three/examples/jsm/controls/OrbitControls.js";
+        import { GLTFLoader } from "https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js";
 
         // Debug console message to check if script is running
         console.log("Script started");
@@ -134,7 +134,7 @@
             
             // Replace with the actual path to your GLB file
             // Make sure this exactly matches your file name (case sensitive)
-            const modelUrl = 'card.glb';
+            const modelUrl = 'Robo.glb';
             
             console.log("Loading model from:", modelUrl);
             

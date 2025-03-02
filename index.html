@@ -105,7 +105,7 @@
         backLight.position.set(-1, -1, -1);
         scene.add(backLight);
 
-        // Initialize OrbitControls
+        // Initialize OrbitControls without the THREE prefix
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.25;

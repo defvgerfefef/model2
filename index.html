@@ -29,22 +29,20 @@
         <canvas id="canvas"></canvas>
     </div>
 
-    <!-- Import Three.js, OrbitControls and GLTFLoader from Skypack CDN -->
     <script type="module">
-        import * as THREE from 'https://cdn.skypack.dev/three@0.174.0';
-        import { OrbitControls } from 'https://cdn.skypack.dev/three/examples/js/controls/OrbitControls.js';
-        import { GLTFLoader } from 'https://cdn.skypack.dev/three/examples/js/loaders/GLTFLoader.js';
+        import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js";
+        import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js";
+        import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js";
 
         // Initialize the scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
 
         // Add lighting to the scene
-        const light = new THREE.AmbientLight(0xffffff, 1);
-        scene.add(light);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+        scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(1, 1, 1).normalize();
@@ -62,7 +60,7 @@
             const model = gltf.scene;
             scene.add(model);
         }, undefined, function(error) {
-            console.error(error);
+            console.error('Error loading GLTF model:', error);
         });
 
         // Animation loop

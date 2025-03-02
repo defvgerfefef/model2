@@ -72,15 +72,11 @@
     </div>
 
     <!-- Import Three.js from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.min.js"></script>
-    
-    <!-- Import OrbitControls -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/examples/js/controls/OrbitControls.js"></script>
-    
-    <!-- Import GLTFLoader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/examples/js/loaders/GLTFLoader.js"></script>
-    
-    <script>
+    <script type="module">
+        import * as THREE from "https://cdn.skypack.dev/three";
+        import { OrbitControls } from "https://unpkg.com/three@0.112/examples/jsm/controls/OrbitControls.js";
+        import { GLTFLoader } from "https://unpkg.com/three@0.112/examples/jsm/loaders/GLTFLoader.js";
+
         console.log("Script started");
 
         const scene = new THREE.Scene();
@@ -110,7 +106,7 @@
         scene.add(backLight);
 
         // Initialize OrbitControls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.25;
         controls.screenSpacePanning = false;
@@ -124,7 +120,7 @@
             console.log("Starting to load model");
 
             // Create and configure the loader
-            const loader = new THREE.GLTFLoader();
+            const loader = new GLTFLoader();
 
             // Clear any existing model
             scene.children.forEach((object) => {
@@ -135,7 +131,7 @@
             });
 
             // Replace with the actual path to your GLB file
-            const modelUrl = 'Robo.glb';
+            const modelUrl = 'card.glb';
 
             console.log("Loading model from:", modelUrl);
 

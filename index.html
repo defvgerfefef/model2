@@ -103,4 +103,105 @@
         directionalLight.position.set(1, 1, 1);
         scene.add(directionalLight);
 
-        const backLight =
+        const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        backLight.position.set(-1, -1, -1);
+        scene.add(backLight);
+
+        // Add orbit controls to rotate, zoom
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Loading elements
+        const loadingElement = document.getElementById('loading');
+        const progressElement = document.getElementById('loading-progress');
+        const retryButton = document.getElementById('retry-button');
+
+        // Function to load model
+        function loadModel() {
+            console.log("Starting to load model");
+
+            // Create and configure the loader
+            const loader = new GLTFLoader();
+
+            // Clear any existing model
+            scene.children.forEach((object) => {
+                if (object.type !== 'AmbientLight' && 
+                    object.type !== 'DirectionalLight') {
+                    scene.remove(object);
+                }
+            });
+
+            // Replace with the actual path to your GLB file
+            // Make sure this exactly matches your file name (case sensitive)
+            const modelUrl = 'Robo.glb';
+
+            console.log("Loading model from:", modelUrl);
+
+            // Load the model
+            loader.load(
+                modelUrl,
+                function (gltf) {
+                    console.log("Model loaded successfully");
+                    const model = gltf.scene;
+
+                    // Center the model
+                    const box = new THREE.Box3().setFromObject(model);
+                    const center = box.getCenter(new THREE.Vector3());
+                    model.position.sub(center);
+
+                    // Determine appropriate camera distance
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    camera.position.z = maxDim * 2.5;
+
+                    // Add the model to the scene
+                    scene.add(model);
+
+                    // Hide loading text once model is loaded
+                    loadingElement.style.display = 'none';
+                },
+                function (xhr) {
+                    // Loading progress
+                    if (xhr.lengthComputable) {
+                        const percentComplete = Math.round((xhr.loaded / xhr.total) * 100);
+                        progressElement.textContent = percentComplete + '%';
+                        console.log('Loading progress:', percentComplete + '%');
+                    }
+                },
+                function (error) {
+                    // Error handling
+                    console.error('Error loading the model:', error);
+                    loadingElement.innerHTML = 
+                        'Error loading model: ' + error.message + '<br>' +
+                        'Please check that your file exists and is named correctly.<br>' +
+                        '<button id="retry-button" class="button">Retry Loading</button>';
+
+                    document.getElementById('retry-button').addEventListener('click', loadModel);
+                }
+            );
+        }
+
+        // Add retry button functionality
+        retryButton.addEventListener('click', loadModel);
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Start everything
+        loadModel();
+        animate();
+    </script>
+</body>
+</html>
